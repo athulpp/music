@@ -1,15 +1,16 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:musion/controller/musiccontroller.dart';
+import 'package:musion/screen/allsongs.dart';
 
 class PlayingControls extends StatelessWidget {
   final bool isPlaying;
-  final bool isPlaylist;
   final Function()? onPrevious;
   final Function() onPlay;
   final Function()? onNext;
 
   PlayingControls({
     required this.isPlaying,
-    this.isPlaylist = false,
     this.onPrevious,
     required this.onPlay,
     this.onNext,
@@ -17,11 +18,12 @@ class PlayingControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         IconButton(
-          onPressed: isPlaylist ? onPrevious : null,
+          onPressed: onPrevious,
           icon: Icon(
             Icons.skip_previous,
             size: 32,
@@ -37,7 +39,7 @@ class PlayingControls extends StatelessWidget {
           ),
         ),
         IconButton(
-          onPressed: isPlaylist ? onNext : null,
+          onPressed: onNext,
           icon: Icon(Icons.skip_next),
           color: Colors.black,
           iconSize: 32,

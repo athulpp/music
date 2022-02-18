@@ -21,78 +21,14 @@ class AllSongs extends StatefulWidget {
 }
 
 class _AllSongsState extends State<AllSongs> {
-  // OpenAssetAudio player=OpenAssetAudio();
-  // List<Audio> playPlaylist = [];
-  // late AssetsAudioPlayer _assetsAudioPlayer;
-  // final List<StreamSubscription> _subscriptions = [];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    // player.open(Audio('assests/audios/music.mp3'),
-    //     autoStart: true, showNotification: true);
-    // player.open(Audio('assests/audios/Sorry Alan Walker 128 Kbps.mp3'));
-    // super.initState();
-  }
-  // List<Audio> audios11 = [
-  //   Audio("assests/audios/music.mp3",
-  //       metas: Metas(
-  //           id: '1',
-  //           title: 'Din Din bhonsala',
-  //           artist: 'Florent Champigny',
-  //           image: const MetasImage.network(
-  //               'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg'))),
-  //   Audio("assests/audios/Sorry Alan Walker 128 Kbps.mp3",
-  //       metas: Metas(
-  //         id: '2',
-  //         title: 'Rocksss',
-  //         artist: 'Florent Champignyffhjjjjj',
-  //       )),
-  //   Audio("assests/audios/Your Power Billie Eilish 128 Kbps.mp3",
-  //       metas: Metas(
-  //           id: '3',
-  //           title: 'Your Power',
-  //           artist: 'Billie Eilish',
-  //           image: MetasImage.asset(
-  //               'assests/images/album/Your-Power-Billie-Eilish-500-500.jpg'))),
-  //   Audio("assests/audios/Electric Katy Perry 128 Kbps.mp3",
-  //       metas: Metas(
-  //         id: '4',
-  //         title: 'Electric',
-  //         artist: 'Electric',
-  //       ))
-  // ];
-
-  // final audios = <Audio>[
-  //   Audio(
-  //     'assests/audios/music.mp3',
-  //     //playSpeed: 2.0,
-  //     metas: Metas(
-  //       id: 'Rock',
-  //       title: 'Rock',
-  //       artist: 'Florent Champigny',
-  //       album: 'RockAlbum',
-  //       image: MetasImage.network(
-  //           'https://static.radio.fr/images/broadcasts/cb/ef/2075/c300.png'),
-  //     ),
-  //   ),
-  //   Audio(
-  //     'assets/audios/2 country.mp3',
-  //     metas: Metas(
-  //       id: 'Country',
-  //       title: 'Country',
-  //       artist: 'Florent Champigny',
-  //       album: 'CountryAlbum',
-  //       image: MetasImage.asset('assets/images/country.jpg'),
-  //     ),
-  //   ),
-  // ];
   @override
   Widget build(BuildContext context) {
     player.open(
       Playlist(audios: audios11),
       autoStart: false,
       showNotification: true,
+      notificationSettings:
+          NotificationSettings(stopEnabled: false, seekBarEnabled: false),
       loopMode: LoopMode.playlist,
       // seek: const Duration(seconds: 0, minutes: 0),
     );
@@ -116,62 +52,79 @@ class _AllSongsState extends State<AllSongs> {
           )
         ],
       ),
-      body: ListView.builder(
-          itemCount: audios11.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              // onTap: () => Get.toNamed('/music'),
-              onTap: () {
-                // player.dispose();
-                player.playlistPlayAtIndex(index);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MusicPlayer(
-                              title: audios11[index].metas.title!,
-                              artist: audios11[index].metas.artist!,
-                              index: index,audio:audios11,
-                            ))
-                    // );
-                    // final x = audios11;
-                    // Get.to(MusicPlayer(,
-                    //   index: index,
-                    // ));
-                    );
-              },
-              leading: QueryArtworkWidget(
-                id: index,
-                type: ArtworkType.AUDIO,
-                artworkWidth: 300.0,
-                artworkHeight: 300.0,
-                nullArtworkWidget: Image.asset(
-                  "assests/images/apple-music-logo.png",
-                  width: 50.0,
-                  height: 50.0,
-                ),
-              ),
-              // leading: CircleAvatar(backgroundImage: audios11[index].metas.image!,),
-              title: Text(
-                audios11[index].metas.title!,
-              ),
-              subtitle: Text(audios11[index].metas.artist!),
-              trailing: PopupMenuButton(
-                  color: Colors.white,
-                  itemBuilder: (context) => [
-                        PopupMenuItem(
-                          child: TextButton(
-                              onPressed: () {}, child: Text('Add to Playlist')),
-                          value: 1,
-                        ),
-                        PopupMenuItem(
-                          child: TextButton(
-                              onPressed: () {},
-                              child: Text('Add to Favorites')),
-                          value: 2,
-                        ),
-                      ]),
-            );
-          }),
+      body: player.builderRealtimePlayingInfos(
+        builder: (context, RealtimePlayingInfos? currentinfo) {
+          return ListView.builder(
+              itemCount: audios11.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  // onTap: () => Get.toNamed('/music'),
+                  onTap: () {
+                    // player.dispose();
+                    player.playlistPlayAtIndex(index);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MusicPlayer(
+                                  title: audios11[index].metas.title!,
+                                  artist: audios11[index].metas.artist!,
+                                  index: index,
+                                  audio: audios11,
+                                ))
+                        // );
+                        // final x = audios11;
+                        // Get.to(MusicPlayer(,
+                        //   index: index,
+                        // ));
+                        );
+                  },
+                  // leading: QueryArtworkWidget(
+                  //   id: index,
+                  //   type: ArtworkType.AUDIO,
+                  //   artworkWidth: 300.0,
+                  //   artworkHeight: 300.0,
+                  //   nullArtworkWidget: Image.asset(
+                  //     "assests/images/apple-music-logo.png",
+                  //     width: 50.0,
+                  //     height: 50.0,
+                  //   ),
+                  // ),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      child: Image.network(
+                        audios11[index].metas.image!.path,
+                        scale: 1,
+                      ),
+                    ),
+                  ),
+                  // leading: CircleAvatar(backgroundImage: audios11[index].metas.image!,),
+                  title: Text(
+                    audios11[index].metas.title!,
+                  ),
+                  subtitle: Text(audios11[index].metas.artist!),
+                  trailing: PopupMenuButton(
+                      color: Colors.white,
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                              child: TextButton(
+                                  onPressed: () {},
+                                  child: Text('Add to Playlist')),
+                              value: 1,
+                            ),
+                            PopupMenuItem(
+                              child: TextButton(
+                                  onPressed: () {},
+                                  child: Text('Add to Favorites')),
+                              value: 2,
+                            ),
+                          ]),
+                );
+              });
+        },
+      ),
       // floatingActionButton: Container(
       //   width: MediaQuery.of(context).size.width,
       //   color: Colors.grey,
@@ -206,14 +159,15 @@ class _AllSongsState extends State<AllSongs> {
               //   backgroundColor: Colors.grey,
               // ),
               // title: Text(
-              //   audios11[].metas.title!,
+              //   // Playlist.audios.metas.
+              //   ,
               //   style: TextStyle(color: Colors.white),
               // ),
               // subtitle: Text(
-              //   'data',
+              //   '  myAudio!.metas.artist!,',
               //   style: TextStyle(color: Colors.white),
               // ),
-              title: Wrap(
+              trailing: Wrap(
                 alignment: WrapAlignment.spaceBetween,
                 children: [
                   IconButton(

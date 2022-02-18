@@ -7,114 +7,27 @@ import 'package:musion/screen/allsongs.dart';
 List<Audio> audios11 = [
   Audio("assests/audios/music.mp3",
       metas: Metas(
-          title: 'Din Din bhonsala',
-          artist: 'Florent Champigny',
+          title: 'Tera Ho Raha Hoon',
+          artist: 'Nikhita Gandhi',
           image: const MetasImage.network(
-              'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg'))),
+              'https://lyricsworldyou.com/wp-content/uploads/2022/02/TERA-HO-RAHA-HOON-LYRICS-Sourav-Joshi.webp'))),
   Audio("assests/audios/Sorry Alan Walker 128 Kbps.mp3",
       metas: Metas(
-        title: 'Rocksss',
-        artist: 'Florent Champignyffhjjjjj',
-      )),
+          title: 'Sorry Alan Walker',
+          artist: 'Alan Walker',
+          image: const MetasImage.network(
+              'https://i.ytimg.com/vi/8RGxF9JltAQ/maxresdefault.jpg'))),
   Audio("assests/audios/Your Power Billie Eilish 128 Kbps.mp3",
       metas: Metas(
           title: 'Your Power',
           artist: 'Billie Eilish',
-          image: MetasImage.asset(
-              'assests/images/album/Your-Power-Billie-Eilish-500-500.jpg'))),
+          image: const MetasImage.network(
+              'https://images.genius.com/b826bffa6a542a466c2143f4702b9f25.1000x1000x1.png'))),
   Audio("assests/audios/Electric Katy Perry 128 Kbps.mp3",
       metas: Metas(
-        id: '4',
-        title: 'Electric',
-        artist: 'Electric',
-      ))
+          id: '4',
+          title: 'Electric',
+          artist: 'Katy Perry',
+          image: const MetasImage.network(
+              'https://images.ctfassets.net/ycci6h8ksgtu/6uokVfiiaR9fKj1SgKxcNj/4ec49f6c7e62ea6d6a757ff2558974e2/katy_album')))
 ];
-
-
-class OpenAssetAudio extends GetxController {
-  RxBool isPlaying = false.obs;
-  late Stream<bool> isAudioPlayerPlaying;
-  // late Stream<Playing?> currentStatus;
-  // RxString songTitle = "UNKNOWN TITLE".obs;
-  // RxString songArtists = "UNKNOWN ARTISTS".obs;
-  // RxInt songId = 0.obs;
-
-  // player.open(
-  //     Playlist(audios: audios11),
-  //     autoStart: false,
-  //     showNotification: true,
-  //     loopMode: LoopMode.none,
-  //     seek: Duration(seconds: 0),
-  //   );
-  // List<Audio> allsong;
-  // int index?;
-  // List<Audio> audios11 = [
-  //   Audio("assests/audios/music.mp3",
-  //       metas: Metas(
-  //           id: '1',
-  //           title: 'Din Din bhonsala',
-  //           artist: 'Florent Champigny',
-  //           image: const MetasImage.network(
-  //               'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg'))),
-  //   Audio("assests/audios/Sorry Alan Walker 128 Kbps.mp3",
-  //       metas: Metas(
-  //         id: '2',
-  //         title: 'Rocksss',
-  //         artist: 'Florent Champignyffhjjjjj',
-  //       )),
-  //   Audio("assests/audios/Your Power Billie Eilish 128 Kbps.mp3",
-  //       metas: Metas(
-  //           id: '3',
-  //           title: 'Your Power',
-  //           artist: 'Billie Eilish',
-  //           image: MetasImage.asset(
-  //               'assests/images/album/Your-Power-Billie-Eilish-500-500.jpg')))
-  // ];
-  // bool? notify;
-  // Future<bool?> setNotifyValue() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   notify = await prefs.getBool("switchState");
-
-  //   return notify;
-  // }
-
-  // OpenAssetAudio({required this.audios11,required this.index});
-  // final AssetsAudioPlayer audioPlayer = AssetsAudioPlayer.withId("0");
-  // openAsset({List<Audio>? audios, required int index}) async {
-  //   // notify = await setNotifyValue();
-  //   audioPlayer.open(
-  //     Playlist(audios: [Audio("assests/audios/music.mp3",
-  //           metas: Metas(
-  //             id: 'Rock',
-  //             title: 'Rock',
-  //             artist: 'Florent Champigny',
-  //           ))],startIndex: index));
-  //     // showNotification: notify == null || notify == true ? true : false,
-  //     notificationSettings: NotificationSettings(
-  //       stopEnabled: false,
-
-  //     );
-
-  // }
-
-//  void open() {}
-  Widget seekBarWidget(BuildContext ctx) {
-    return player.builderRealtimePlayingInfos(
-      builder: (ctx, infos) {
-        Duration cPos = infos.currentPosition;
-        Duration total = infos.duration;
-        return Container(
-          width: 300,
-          child: ProgressBar(
-            progress: cPos,
-            total: total,
-            progressBarColor: Colors.grey,
-            onSeek: (to) {
-              player.seek(to);
-            },
-          ),
-        );
-      },
-    );
-  }
-}

@@ -1,4 +1,6 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:musion/controller/musiccontroller.dart';
 import 'package:musion/screen/allsongs.dart';
 import 'package:musion/screen/favorites.dart';
 import 'package:musion/screen/libary.dart';
@@ -15,7 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   int selectedindex = 0;
   PageController _pageController = PageController();
   List<Widget> _screens = [
@@ -37,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         body: PageView(
           controller: _pageController,
