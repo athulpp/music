@@ -2,39 +2,38 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:musion/controller/musiccontroller.dart';
+// import 'package:musion/controller/musiccontroller.dart';
 import 'package:musion/controller/playing.dart';
-import 'package:musion/main.dart';
+// import 'package:musion/main.dart';
 
-import 'package:musion/screen/allsongs.dart';
+// import 'package:musion/screen/allsongs.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 // import 'package:musion/screen/home.dart';
-import 'allsongs.dart';
+// import 'allsongs.dart';
 
-class MusicPlayer extends StatefulWidget {
-  final String title;
-  final String artist;
-  final int index;
+class MusicPlayer extends StatelessWidget {
   final List<Audio> audio;
 
   MusicPlayer({
     Key? key,
-    required this.title,
-    required this.artist,
-    required this.index,
+    // required this.title,
+    // required this.artist,
+    // required this.index,
     required this.audio,
   }) : super(key: key);
   // bool isPlaying = false;
+  bool usertouch = true;
+  bool isPlaying = false;
 
-  @override
-  State<MusicPlayer> createState() => _MusicPlayerState();
-}
+//   @override
+//   State<MusicPlayer> createState() => _MusicPlayerState();
+// }
 
-class _MusicPlayerState extends State<MusicPlayer> {
-  Duration _duration = Duration();
-  Duration _position = Duration();
-
+// class _MusicPlayerState extends State<MusicPlayer> {
+  // Duration _duration = Duration();
+  // Duration _position = Duration();
+  AssetsAudioPlayer get player => AssetsAudioPlayer.withId('music');
   Audio? myAudio;
   Audio find(List<Audio> source, String fromPath) {
     return source.firstWhere((element) => element.path == fromPath);
@@ -42,7 +41,6 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         appBar: AppBar(
             title: Text(
@@ -60,8 +58,8 @@ class _MusicPlayerState extends State<MusicPlayer> {
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: player.builderCurrent(builder: (context, Playing? playing) {
-            myAudio = find(widget.audio, playing!.audio.assetAudioPath);
-
+            myAudio = find(audio, playing!.audio.assetAudioPath);
+            var image = int.parse(myAudio!.metas.id!);
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -70,9 +68,12 @@ class _MusicPlayerState extends State<MusicPlayer> {
                       child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
-                        width: 300,
-                        height: 300,
-                        child: Image.network(myAudio!.metas.image!.path)),
+                      width: 300,
+                      height: 300,
+                      child: QueryArtworkWidget(
+                          id: image, type: ArtworkType.AUDIO),
+                      // child: Image.network(myAudio!.metas.image!.path)
+                    ),
                   )),
                   SizedBox(
                     height: 80,

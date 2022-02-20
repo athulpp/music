@@ -12,17 +12,17 @@ class NewPlayList extends StatelessWidget {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Give Playlist Name",
                   ),
-                  SizedBox(
+              const    SizedBox(
                     height: 10,
                   ),
-                  TextField(
+              const    TextField(
                     decoration: InputDecoration(
                         border: OutlineInputBorder(), hintText: ''),
                   ),
-                  SizedBox(
+             const     SizedBox(
                     height: 10,
                   ),
                   ElevatedButton(

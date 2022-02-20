@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:musion/screen/album.dart';
-import 'package:musion/screen/favorites.dart';
-import 'package:musion/screen/newplaylist.dart';
+// import 'package:musion/screen/favorites.dart';
+// import 'package:musion/screen/newplaylist.dart';
 
 class LibaryScreen extends StatelessWidget {
   const LibaryScreen({Key? key}) : super(key: key);

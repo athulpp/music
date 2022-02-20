@@ -1,6 +1,8 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:musion/controller/musiccontroller.dart';
+import 'package:musion/database/databasefunctions/datafunction.dart';
 import 'package:musion/screen/allsongs.dart';
 import 'package:musion/screen/favorites.dart';
 import 'package:musion/screen/libary.dart';
@@ -9,74 +11,114 @@ import 'package:musion/screen/search.dart';
 import 'package:musion/screen/settings.dart';
 import 'package:musion/screen/splash.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatelessWidget {
+  final List<Audio> audio;
+  HomeScreen({Key? key, required this.audio}) : super(key: key);
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  final controller = Get.put((DataFunction));
 
-class _HomeScreenState extends State<HomeScreen> {
-  int selectedindex = 0;
-  PageController _pageController = PageController();
-  List<Widget> _screens = [
-    AllSongs(),
-    FavouriteScreen(),
-    SearchScreen(),
-    LibaryScreen()
-  ];
-  void _onPageChanged(int index) {
-    setState(() {
-      selectedindex = index;
-    });
-  }
-
-  void onItemTapped(int selectedIndex) {
-    print(selectedIndex);
-    _pageController.jumpToPage(selectedIndex);
-  }
-
+  // AssetsAudioPlayer get player => AssetsAudioPlayer.withId('music');
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetOption = [
+      AllSongs(
+        audios: audio,
+      ),
+      FavouriteScreen(),
+      SearchScreen(),
+      LibaryScreen()
+    ];
 
-    return Scaffold(
-        body: PageView(
-          controller: _pageController,
-          children: _screens,
-          onPageChanged: _onPageChanged,
-          // physics: NeverScrollableScrollPhysics(),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: onItemTapped,
-          backgroundColor: Colors.grey,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: selectedindex == 0 ? Colors.black : Colors.white,
-              ),
-              label: '',
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.grey,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: Image.asset(
+            'assests/images/Splash_screen.png',
+            scale: 0.2,
+          ),
+          title:const Text(
+            'Musions',
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              shadows: <Shadow>[
+                Shadow(
+                  offset: Offset(2, 2),
+                  blurRadius: 3.0,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
+                // Shadow(
+                //   offset: Offset(10.0, 10.0),
+                //   blurRadius: 8.0,
+                //   color: Color.fromARGB(125, 0, 0, 255),
+                // ),
+              ],
             ),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.favorite_border,
-                  color: selectedindex == 1 ? Colors.black : Colors.white,
-                ),
-                label: ''),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.search,
-                  color: selectedindex == 2 ? Colors.black : Colors.white,
-                ),
-                label: ''),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.folder,
-                  color: selectedindex == 3 ? Colors.black : Colors.white,
-                ),
-                label: '')
+          ),
+
+          centerTitle: true,
+          // backgroundColor: Colors.transparent,
+          actions: [
+            IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Get.to(() => SettingScreen());
+                }),
           ],
-        ));
+        ),
+        body: GetBuilder<DataFunction>(
+          init: DataFunction(),
+          id: "indexchange",
+          builder: (controller) {
+            return _widgetOption[controller.selectedIndex];
+          },
+        ),
+        bottomNavigationBar: GetBuilder<DataFunction>(
+          id: "indexchange",
+          builder: (controller) {
+            return BottomNavigationBar(
+              fixedColor: Colors.amber,
+
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.home,
+                    color: Colors.black,
+                  ),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.favorite,
+                    color: Colors.black,
+                  ),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  ),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.library_music,
+                    color: Colors.black,
+                  ),
+                  label: '',
+                ),
+              ],
+              onTap: controller.onItemTapped,
+              currentIndex: controller.selectedIndex,
+              // selectedItemColor: Colors.green,
+              selectedIconTheme: IconThemeData(color: Colors.amber, size: 34),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
