@@ -26,7 +26,9 @@ class HomeScreen extends StatelessWidget {
       ),
       FavouriteScreen(),
       SearchScreen(),
-      LibaryScreen()
+      LibaryScreen(
+        audios: audio,
+      )
     ];
 
     return SafeArea(
@@ -38,7 +40,7 @@ class HomeScreen extends StatelessWidget {
             'assests/images/Splash_screen.png',
             scale: 0.2,
           ),
-          title:const Text(
+          title: const Text(
             'Musions',
             style: TextStyle(
               fontSize: 25,

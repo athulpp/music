@@ -9,6 +9,7 @@ import 'package:musion/controller/opensMusic.dart';
 
 // import 'package:musion/screen/home.dart';
 import 'package:musion/screen/musicplayer.dart';
+import 'package:musion/widgets/popupmenu.dart';
 // import 'package:musion/screen/settings.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -19,7 +20,7 @@ class AllSongs extends StatelessWidget {
   AllSongs({Key? key, required this.audios}) : super(key: key);
 
   AssetsAudioPlayer get player => AssetsAudioPlayer.withId('music');
-  List<Audio>? audio = [];
+  List<Audio> audio = [];
   // List<dynamic>? a = [];
   // Audio? myAudio;
   // Audio find(List<Audio> source, String fromPath) {
@@ -56,54 +57,53 @@ class AllSongs extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               var image = int.parse(audios[index].metas.id.toString());
               return ListTile(
-                // onTap: () => Get.toNamed('/music'),
-                onTap: () {
-                  // player.dispose();
-                  // player.playlistPlayAtIndex(index);
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
+                  // onTap: () => Get.toNamed('/music'),
+                  onTap: () {
+                    // player.dispose();
+                    // player.playlistPlayAtIndex(index);
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
 
-                  //         builder: (context) => MusicPlayer(
-                  //               audio: audios,
-                  //             )));
-                  OpenPlayer().openPlayer(index, audios);
-                  Get.to(() => MusicPlayer(
-                        audio: audios,
-                      ));
-                },
-
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    child:
-                        QueryArtworkWidget(id: image, type: ArtworkType.AUDIO),
-                    width: 50,
-                    height: 50,
+                    //         builder: (context) => MusicPlayer(
+                    //               audio: audios,
+                    //             )));
+                    OpenPlayer().openPlayer(index, audios);
+                    Get.to(() => MusicPlayer(
+                          audio: audios,
+                        ));
+                  },
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: SizedBox(
+                      child: QueryArtworkWidget(
+                          id: image, type: ArtworkType.AUDIO),
+                      width: 50,
+                      height: 50,
+                    ),
                   ),
-                ),
-                // leading: CircleAvatar(backgroundImage: audios11[index].metas.image!,),
-                title: Text(
-                  audios[index].metas.title!,
-                ),
-                subtitle: Text(audios[index].metas.artist!),
-                trailing: PopupMenuButton(
-                    color: Colors.white,
-                    itemBuilder: (context) => [
-                          PopupMenuItem(
-                            child: TextButton(
-                                onPressed: () {},
-                                child: Text('Add to Playlist')),
-                            value: 1,
-                          ),
-                          PopupMenuItem(
-                            child: TextButton(
-                                onPressed: () {},
-                                child: Text('Add to Favorites')),
-                            value: 2,
-                          ),
-                        ]),
-              );
+                  // leading: CircleAvatar(backgroundImage: audios11[index].metas.image!,),
+                  title: Text(
+                    audios[index].metas.title!,
+                  ),
+                  subtitle: Text(audios[index].metas.artist!),
+                  // trailing: PopupMenuButton(
+                  //     color: Colors.white,
+                  //     itemBuilder: (context) => [
+                  //           PopupMenuItem(
+                  //             child: TextButton(
+                  //                 onPressed: () {},
+                  //                 child: Text('Add to Playlist')),
+                  //             value: 1,
+                  //           ),
+                  //           PopupMenuItem(
+                  //             child: TextButton(
+                  //                 onPressed: () {},
+                  //                 child: Text('Add to Favorites')),
+                  //             value: 2,
+                  //           ),
+                  //         ]),
+                  trailing: Popupmenu(audios: audios, index: index));
             }));
 
     // }),

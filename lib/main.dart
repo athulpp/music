@@ -8,6 +8,8 @@ import 'package:musion/database/databasefunctions/datafunction.dart';
 
 import 'package:musion/screen/home.dart';
 
+import 'database/favo.dart';
+import 'database/playlistmodel.dart';
 import 'database/songsdata.dart';
 
 // final routesCtrl = Get.put(RoutesController());
@@ -15,7 +17,19 @@ import 'database/songsdata.dart';
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(DataSongModelAdapter());
+  Hive.registerAdapter(PlaylistModelsAdapter());
+  Hive.registerAdapter(FavoritesmosdelAdapter());
   await Hive.openBox('songbox');
+  await Hive.openBox('playlist');
+  await Hive.openBox('fav');
+    var favoritesbox = Hive.box('fav');
+
+  List<dynamic>? c = favoritesbox.keys.toList();
+  if (c.isEmpty) {
+    List<dynamic> dummy = [];
+    favoritesbox.put('favsong', dummy);
+  }
+
   // routesCtrl.Splash();
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
@@ -29,9 +43,9 @@ class Splash extends StatelessWidget {
 
   final assetsAudioPlayer = AssetsAudioPlayer.withId('music');
 
-  // Audio find(List<Audio> source, String fromPath) {
-  //   return source.firstWhere((element) => element.path == fromPath);
-  // }
+  Audio find(List<Audio> source, String fromPath) {
+    return source.firstWhere((element) => element.path == fromPath);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +88,7 @@ class Music extends StatelessWidget {
             default:
               return GetBuilder<DataFunction>(
                 id: "songs",
-                builder: (controller ) {
+                builder: (controller) {
                   return HomeScreen(
                     audio: controller.audio,
                   );

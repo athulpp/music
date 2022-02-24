@@ -1,148 +1,230 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:musion/screen/album.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:musion/database/databasefunctions/datafunction.dart';
+// import 'package:musion/screen/album.dart';
 // import 'package:musion/screen/favorites.dart';
 // import 'package:musion/screen/newplaylist.dart';
 
 class LibaryScreen extends StatelessWidget {
-  const LibaryScreen({Key? key}) : super(key: key);
+  final List<Audio> audios;
+  LibaryScreen({Key? key, required this.audios}) : super(key: key);
+  final controller = Get.put(DataFunction());
+  var playlistbox = Hive.box('playlist');
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   // TODO: implement build
-  //   throw UnimplementedError();
-  // }
-  CreateAlertDialouge(BuildContext context) {
-    TextEditingController playlistname = TextEditingController();
-    return AlertDialog(
-      title: Text('Enter The new Playlist Name'),
-      content: TextField(
-        controller: playlistname,
-      ),
-      actions: [
-        MaterialButton(
-          onPressed: () {
-            Navigator.of(context).pop(playlistname.text.toString());
-          },
-          elevation: 5,
-          child: Text('OK'),
-        )
-      ],
-    );
-  }
+  final TextEditingController namecontroller = TextEditingController();
+  String? title;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        title: Text(
-          'Libary',
-          style: TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          ListView(
-            shrinkWrap: true,
-            children: [
-              Divider(
-                thickness: 2,
-              ),
-              ListTile(
-                onTap: () => Get.toNamed('/newplay'),
-                // AlertDialog(
-                //   title: Text('Enter New Playlist name'),
-                // );
-                // CreateAlertDialouge(context),
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      height: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          children: [
+            ListTile(
+              title: GestureDetector(
+                child: Center(
+                  child: Container(
+                    width: 150,
+                    height: 50,
+                    child: Text(
+                      'Create New Playlist',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                onTap: () => showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    List<dynamic> dummylist = [];
+                    return AlertDialog(
+                      backgroundColor: Colors.grey,
+                      title: Text(
+                        'Create New Playlist',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      actions: [
+                        TextField(
+                          controller: namecontroller,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(),
+                            hintText: 'Playlist Name',
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            var keys = playlistbox.keys.toList();
 
-                leading: CircleAvatar(
-                  backgroundColor: Colors.black,
+                            if (namecontroller != null) {
+                              title = namecontroller.text;
+                              keys.where((element) => element == title).isEmpty
+                                  ? title!.isNotEmpty
+                                      ? playlistbox.put(
+                                          title,
+                                          dummylist,
+                                        )
+                                      : playlistbox
+                                  : ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: const Text(
+                                            'This name is already exist'),
+                                        duration: const Duration(seconds: 1),
+                                      ),
+                                    );
+                              ;
+                              controller.update(["edited"]);
+                              Get.back();
+                              namecontroller.clear();
+                            }
+                          },
+                          child: const Text(
+                            'OK',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
-                title: Text('Create Playlist'),
-              ),
-              // ListTile(
-              //   onTap: () => Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //           builder: (context) => const FavouriteScreen())),
-              //   leading: CircleAvatar(
-              //     backgroundColor: Colors.green,
-              //   ),
-              //   title: Text('Favorites'),
-              // )
-            ],
-          ),
-          SizedBox(height: 10),
-          Divider(
-            thickness: 2,
-          ),
-          Flexible(
-            // flex: 8,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: 2,
-              itemBuilder: (context, index) => ListTile(
-                onTap: () => {
-                  index,
-                  print(index),
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AlbumScreen()))
-                },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.grey,
-                ),
-                title: Text('Playlists $index'),
-                trailing:
-                    // IconButton(onPressed: () {}, icon: Icon(Icons.delete)
-                    // )
-                    PopupMenuButton(
-                        color: Colors.white,
-                        itemBuilder: (context) => [
-                              PopupMenuItem(
-                                child: TextButton(
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text('Remove'),
-                                              content:
-                                                  Text('Do you want Remove'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                    onPressed: () {
-                                                      print('cancel');
-                                                    },
-                                                    child: Text('Cancel')),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    print('Yes');
-                                                  },
-                                                  child: Text('Yes'),
-                                                )
-                                              ],
-                                            );
-                                          });
-                                    },
-                                    child: Text('Remove From Playlists')),
-                                value: 1,
-                              ),
-                              // PopupMenuItem(
-                              //   child: TextButton(
-                              //       onPressed: () {},
-                              //       child: Text('Add to Favorites')),
-                              //   value: 2,
-                              // ),
-                            ]),
-                // subtitle: Text('data'),
               ),
             ),
-          ),
-        ],
+            GetBuilder<DataFunction>(builder: (Controller) {
+              return ValueListenableBuilder(
+                valueListenable: Hive.box('playlist').listenable(),
+                builder: (context, Box playlistname, _) {
+                  //var keys = todos.keys.cast<int>().toList();
+                  return (ListView.separated(
+                    physics: ScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    itemCount: playlistname.keys.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, ind) {
+                      return ListTile(
+                        onTap: () {
+                          // Get.to(
+                          //   () => playlistpage(
+                          //       title: playlistname.keyAt(ind), audios: audios),
+                          // );
+                        },
+                        onLongPress: () {
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.black,
+                                title: Text(
+                                  'Create New Playlist',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                actions: [
+                                  TextField(
+                                    controller: namecontroller,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: OutlineInputBorder(),
+                                      hintText: playlistname.keyAt(ind),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      var y = playlistbox
+                                          .get(playlistname.keyAt(ind));
+                                      var keys = playlistbox.keys.toList();
+                                      if (namecontroller.text.isNotEmpty) {
+                                        title = namecontroller.text;
+                                        keys
+                                                .where((element) =>
+                                                    element == title)
+                                                .isEmpty
+                                            ? title!.isNotEmpty
+                                                ? playlistbox.put(
+                                                    title,
+                                                    y,
+                                                  )
+                                                : playlistbox
+                                            : ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                                SnackBar(
+                                                  content: const Text(
+                                                      'This name is already exist'),
+                                                  duration: const Duration(
+                                                      seconds: 1),
+                                                ),
+                                              );
+                                        keys
+                                                .where((element) =>
+                                                    element == title)
+                                                .isEmpty
+                                            ? title!.isNotEmpty
+                                                ? playlistbox.delete(
+                                                    playlistname.keyAt(ind),
+                                                  )
+                                                : playlistbox
+                                            : playlistbox;
+                                      }
+                                      controller.update();
+                                      Navigator.pop(context, 'OK');
+                                      namecontroller.clear();
+                                    },
+                                    child: const Text(
+                                      'OK',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        leading: Icon(
+                          Icons.playlist_play,
+                          color: Colors.white,
+                        ),
+                        title: playlistname.isEmpty
+                            ? Text(
+                                "No",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            : Text(
+                                playlistname.keyAt(ind),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            playlistname.deleteAt(ind);
+                          },
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, index) => Divider(
+                      color: Colors.white,
+                    ),
+                  ));
+                },
+              );
+            })
+          ],
+        ),
       ),
     );
   }
