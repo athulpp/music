@@ -12,8 +12,8 @@ import 'database/favo.dart';
 import 'database/playlistmodel.dart';
 import 'database/songsdata.dart';
 
-// final routesCtrl = Get.put(RoutesController());
-// final playerCtrl = Get.put(OpenAssetAudio());
+const String userOnOfNotification = 'isUserChoice';
+
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(DataSongModelAdapter());
@@ -22,7 +22,7 @@ Future<void> main() async {
   await Hive.openBox('songbox');
   await Hive.openBox('playlist');
   await Hive.openBox('fav');
-    var favoritesbox = Hive.box('fav');
+  var favoritesbox = Hive.box('fav');
 
   List<dynamic>? c = favoritesbox.keys.toList();
   if (c.isEmpty) {

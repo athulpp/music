@@ -1,107 +1,171 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:musion/controller/opensMusic.dart';
+import 'package:musion/database/databasefunctions/datafunction.dart';
+import 'package:musion/screen/musicplayer.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class FavouriteScreen extends StatelessWidget {
-  const FavouriteScreen({Key? key}) : super(key: key);
-
+  FavouriteScreen({Key? key}) : super(key: key);
+  List<Audio> audio = [];
+  final controller = Get.put(DataFunction());
+  AssetsAudioPlayer get player => AssetsAudioPlayer.withId('music');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        title: Text('Favorite'),
+        title: const Text('Favorite'),
         centerTitle: true,
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Center(child: Image.asset('assests/images/fav.png')),
-            SizedBox(
-              height: 10,
-            ),
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: 5,
-                itemBuilder: (context, index) => ListTile(
-                  onTap: () => {index, print(index)},
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.grey,
-                  ),
-                  title: Text('Playlists $index'),
-                  trailing: PopupMenuButton(
-                      color: Colors.white,
-                      itemBuilder: (context) => [
-                            PopupMenuItem(
-                              child: TextButton(
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: Text('Remove'),
-                                            content: Text('Do you want Remove'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                  onPressed: () {
-                                                    print('cancel');
-                                                  },
-                                                  child: Text('Cancel')),
-                                              TextButton(
-                                                onPressed: () {
-                                                  print('Yes');
-                                                },
-                                                child: Text('Yes'),
-                                              )
-                                            ],
-                                          );
-                                        });
-                                  },
-                                  child: Text('Remove From Favorites')),
-                              value: 1,
-                            ),
-                            // PopupMenuItem(
-                            //   child: TextButton(
-                            //       onPressed: () {},
-                            //       child: Text('Add to Favorites')),
-                            //   value: 2,
-                            // ),
-                          ]),
-                  // subtitle: Text('data'),
-                ),
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Center(
+                  child: Image.asset(
+                'assests/images/fav.png',
+                scale: 1.5,
+              )),
+              Column(
+                children: [
+                  GetBuilder<DataFunction>(
+                    id: "delete",
+                    builder: (controller) {
+                      return favlist();
+                    },
+                  )
+                ],
+              ),
+            ])),
+      ),
+    );
+  }
+
+  ValueListenableBuilder<Box<dynamic>> favlist() {
+    return ValueListenableBuilder(
+      valueListenable: Hive.box('fav').listenable(),
+      builder: (context, Box todos, _) {
+        audio = [];
+        List<dynamic> keys = todos.get('favsong');
+        for (var i = 0; i <= keys.length - 1; i++) {
+          Audio? newaudio = Audio.file(
+            keys[i]['uri'].toString(),
+            metas: Metas(
+              id: keys[i]['id'].toString(),
+              title: keys[i]['title'],
+              album: keys[i]['album'],
+              artist: keys[i]['artist'],
+              image: MetasImage.file(
+                keys[i]['uri'].toString(),
               ),
             ),
-          ],
-        ),
-      ),
-      // body: Container(
-      //   child: Column(
-      //     children: [
-      //       Center(child: Image.asset('assests/images/fav.png')),
-      //       Flexible(
-      //         child: SingleChildScrollView(
-      //           child: ListView.builder(
-      //             shrinkWrap: true,
-      //             itemCount: 10,
-      //             itemBuilder: (context, index) => ListTile(
-      //               onTap: () => {index, print(index)},
-      //               leading: CircleAvatar(
-      //                 backgroundColor: Colors.green,
-      //               ),
-      //               title: Text('Playlists $index'),
-      //               // subtitle: Text('data'),
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+          );
+
+          audio.add(newaudio);
+        }
+        return (ListView.separated(
+          physics: const ScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          itemCount: keys.length,
+          shrinkWrap: true,
+          itemBuilder: (context, ind) {
+            var title = keys[ind]['title'].toString();
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                title: Text(
+                  keys[ind]['title'].toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                leading: QueryArtworkWidget(
+                  nullArtworkWidget:
+                      Image.asset('assests/images/apple-music-logo.png'),
+                  id: keys[ind]['id'],
+                  type: ArtworkType.AUDIO,
+                ),
+                subtitle: Text(
+                  keys[ind]['artist'],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onTap: () {
+                  player.stop();
+                  OpenPlayer().openPlayer(ind, audio);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MusicPlayer(audio: audio),
+                    ),
+                  );
+                },
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.grey.shade300,
+                            title: const Text(
+                              'Delete Favorite',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            actions: [
+                              Column(
+                                children: const [
+                                  Text(
+                                      "Are you sure you want to delete this song ?"),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                      onPressed: () {
+                                        keys.removeAt(ind);
+                                        controller.update(["delete"]);
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        'Yes',
+                                        style: TextStyle(color: Colors.black),
+                                      )),
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        'No',
+                                        style: TextStyle(color: Colors.black),
+                                      ))
+                                ],
+                              )
+                            ],
+                          );
+                        });
+                  },
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (_, index) => const Divider(
+            color: Colors.black,
+          ),
+        ));
+      },
     );
   }
 }

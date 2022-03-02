@@ -2,11 +2,15 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../main.dart';
 
 class DataFunction extends GetxController {
   @override
   void onInit() {
     requestpermission();
+    getSwitchStatus();
     super.onInit();
   }
 
@@ -66,5 +70,19 @@ class DataFunction extends GetxController {
   void onItemTapped(int index) {
     selectedIndex = index;
     update(["indexchange"]);
+  }
+
+  bool onOff = true;
+  getSwitchStatus() async {
+    onOff = await getChoice();
+
+    update();
+  }
+
+  getChoice() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    bool? onOff = await sharedPreferences.getBool(userOnOfNotification);
+    return onOff != null ? onOff : true;
   }
 }
