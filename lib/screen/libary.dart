@@ -86,9 +86,6 @@ class LibaryScreen extends StatelessWidget {
                                             duration: Duration(seconds: 1),
                                           ),
                                         );
-                                  // controller.update(["edited"]);
-                                  // Get.back();
-                                  // namecontroller.clear();
                                 }
                               },
                               child: const Text(

@@ -31,8 +31,8 @@ class FavouriteScreen extends StatelessWidget {
               ),
               Center(
                   child: Image.asset(
-                'assests/images/fav.png',
-                scale: 1.5,
+                'assests/images/favorite.png',
+                scale: 6,
               )),
               Column(
                 children: [
@@ -124,6 +124,7 @@ class FavouriteScreen extends StatelessWidget {
                             ),
                             actions: [
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: const [
                                   Text(
                                       "Are you sure you want to delete this song ?"),

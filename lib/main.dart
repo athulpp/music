@@ -53,7 +53,7 @@ class Splash extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Center(
         child: Image.asset(
-          'assests/images/Splash_screen.png',
+          'assests/icon.png',
           scale: 5,
           height: 150,
           width: 150,

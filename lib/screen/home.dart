@@ -1,12 +1,10 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:musion/database/databasefunctions/datafunction.dart';
 import 'package:musion/screen/allsongs.dart';
 import 'package:musion/screen/favorites.dart';
 import 'package:musion/screen/libary.dart';
-
 import 'package:musion/screen/search.dart';
 import 'package:musion/screen/settings.dart';
 
@@ -30,16 +28,11 @@ class HomeScreen extends StatelessWidget {
         audios: audio,
       )
     ];
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          leading: Image.asset(
-            'assests/images/Splash_screen.png',
-            scale: 0.2,
-          ),
           title: const Text(
             'Musions',
             style: TextStyle(
@@ -77,8 +70,8 @@ class HomeScreen extends StatelessWidget {
               onTap: controller.onItemTapped,
               currentIndex: controller.selectedIndex,
               // backgroundColor: Colors.black,
-              iconSize: 35,
-
+              iconSize: 38,
+              type: BottomNavigationBarType.fixed,
               selectedItemColor: Colors.white,
               unselectedItemColor: Colors.yellow,
               unselectedIconTheme: const IconThemeData(color: Colors.yellow),

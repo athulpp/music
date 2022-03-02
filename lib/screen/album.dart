@@ -38,8 +38,8 @@ class PlaylistScreen extends StatelessWidget {
               ),
               Center(
                   child: Image.asset(
-                'assests/images/apple-music-logo.png',
-                scale: 2,
+                'assests/images/album.png',
+                scale: 10,
               )),
               const SizedBox(
                 height: 10,

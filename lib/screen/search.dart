@@ -6,7 +6,6 @@ import 'package:musion/database/databasefunctions/datafunction.dart';
 
 import 'package:on_audio_query/on_audio_query.dart';
 
-// ignore: must_be_immutable
 class SearchScreen extends StatelessWidget {
   SearchScreen({Key? key, required this.audios}) : super(key: key);
 
